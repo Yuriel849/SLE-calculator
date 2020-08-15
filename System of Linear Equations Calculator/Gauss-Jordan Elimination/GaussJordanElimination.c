@@ -9,41 +9,67 @@ Contents : Solve a system of linear equations using Gauss-Jordan Elimination, an
 #include <stdio.h>
 #include <stdlib.h>
 
+ struct data {
+	int* current;
+
+}data;
+
 /* Function prototypes */
-double* createSystem(int size);
+double** createSystem(int size);
 int getSizeOfSystem(void);
 void getValuesOfSystem(double* system, int size);
-void printMatrix(double* system, int size);
-void getRrefForm(double* system, int size);
-void rowMultiplication(double* system, int size, int start, int multiplier);
-void rowAddition(double* system, int size, int firstRowStart, int secondRowStart);
-void rowExchange(double* system, int size, int firstRowStart, int secondRowStart);
-void testRowOperations(double* system, int size);
+void printMatrix(double** system, int size);
+void getRrefForm(double** system, int size, int itter);
+void rowMultiplication(double** system, int size, int start, int multiplier);
+void rowAddition(double** system, int size, int firstRowStart, int secondRowStart);
+void rowExchange(double** m, int r1, int r2);
+void kclean();
+int next(int size);
+
+//void testRowOperations(double** system, int size);
 
 /* Main function */
 int main(void)
 {
+
+	 data.current = (int*)malloc(sizeof(int) * 2);
+	*data.current = 0;
+	*(data.current + 1) = 0;
+
+		//size == rows : 1
 	int size = getSizeOfSystem();
-	double* system = createSystem(size);
+	int columns = 1 + size;
+	double** system = createSystem(size);
 
 	printMatrix(system, size);
-	getRrefForm(system, size);
+	getRrefForm(system, size, 0);
 
+	free(data.current);
 	free(system);
 }
 
 /* Create system of linear equations */
-double* createSystem(int size)
+double** createSystem(int size)
 {
-	int dataBytes;
-	double* system;
+	int dataBytes = 1 + size;
+	double** system;
 
-	dataBytes = size * (size + 1) * sizeof(double); // Rows * Columns of extended coefficient matrix
-	if ((system = (double *)malloc(dataBytes)) == NULL)
-		exit(EXIT_FAILURE); // Exit if memory allocation fails
+	if ((system = (double**)malloc(size * sizeof(double*))) == NULL){
+		exit(EXIT_FAILURE);
+	}
+	for (int i = 0; i < size; i++) {
+		if (system[i] = (double*)malloc(dataBytes * sizeof(double)) == NULL) {
+			exit(EXIT_FAILURE);
+		}
+
+	}
+
+	//dataBytes = size * (size + 1) * sizeof(double); // Rows * Columns of extended coefficient matrix
+	//if ((system = (double *)malloc(dataBytes)) == NULL)
+		//exit(EXIT_FAILURE); // Exit if memory allocation fails
 
 	getValuesOfSystem(system, size);
-	
+
 	return system;
 }
 
@@ -61,6 +87,7 @@ int getSizeOfSystem(void)
 			break;
 
 		printf("That entry is invalid. Enter the number of equations: ");
+		kclean();
 	}
 
 	return equations;
@@ -69,54 +96,55 @@ int getSizeOfSystem(void)
 /* Enter coefficients and solution values (user input) */
 void getValuesOfSystem(double* system, int size)
 {
+
 	printf("Please enter the coefficients of each equation one at a time and hit Enter.\n");
 	for (int i = 0; i < size * (size + 1); i++)
 	{
-		scanf("%lf", (system + i));
+		for (int y = 0; y <= size; y++) {
+			scanf("%lf", &*(system + i)+ y);
+			kclean();
+		}
+
 	}
 }
 
 /* Find rref form of extended coefficient matrix */
-void getRrefForm(double* system, int size)
+void getRrefForm(double** system, int size, int itter)
 {
 	// Test the proper operation of row operation functions
 	//testRowOperations(system, size);
+	/* for (int i = 0; i < (size * (size++)); i + (size++)) // inf loop */
 
-	for (int i = 0; i < (size * (size++)); i + (size++))
-	{
-		for (int j = 0; j < (size * (size++)); j + (size++))
-		{
 			// If first element in first row is 0, switch first row with another row where the first row is not zero
-			if (system[i] == 0)
+			if (*((*system +itter) + itter) == 0)
 			{
-				int loop = j;
-
-				while (system[loop] == 0)
-				{
-					rowExchange(system, size, j, loop + (size++));
-					loop += size++;
-				}
+				// int loop = j;
+				rowExchange(&system, itter, next(size));
+				getRrefForm(system, size, itter);
 			}
 			// If first element in first row is not 0, divide entire row by that value
-			else
-				rowMultiplication(system, size, j, (1 / system[j]));
-			
-			// If any other row below the first row has a first element that is not 0, subtract from that row a multiple of the first row such that the first element becomes 0
-			
+			else {
+				rowMultiplication(system, size, itter, ((double)1 / *((*system + itter) + itter)));
 
-		}
-	}
-
-	// Move on to the second row
-	// After the last row has been processed, proceed upwards
-	
-	// Check for solution
+				int tmp = *(data.current + 1) +1;
+				*(data.current + 1) += 1;
+				getRrefForm(system, size, tmp);
+				// If any other row below the first row has a first element that is not 0, subtract from that row a multiple of the first row such that the first element becomes 0
 
 
-	getchar();
+
+
+		// Move on to the second row
+		// After the last row has been processed, proceed upwards
+
+		// Check for solution
+
+
+
+			}
 }
 
-/* Test the row operation functions (multiplication, addition, exchange) */
+/* Test the row operation functions (multiplication, addition, exchange)
 void testRowOperations(double* system, int size) {
 	printMatrix(system, size);
 	rowMultiplication(system, size, 0, 3);
@@ -129,12 +157,12 @@ void testRowOperations(double* system, int size) {
 
 	printMatrix(system, size);
 }
-
+*/
 /* Row multiplication with scalar (pointers) */
 void rowMultiplication(double* system, int size, int start, int multiplier)
 {
 	int end = start + size;
-	
+
 	for (; start < end; start++)
 	{
 		system[start] *= multiplier;
@@ -152,7 +180,7 @@ void rowAddition(double* system, int size, int firstRowStart, int secondRowStart
 	}
 }
 
-/* Row exchange (pointers) */
+/* Row exchange (pointers)
 void rowExchange(double* system, int size, int firstRowStart, int secondRowStart)
 {
 	double temp = 0; // Variable to use when swapping values
@@ -165,19 +193,49 @@ void rowExchange(double* system, int size, int firstRowStart, int secondRowStart
 		system[secondRowStart] = temp;
 	}
 }
+*/
+void rowExchange(double** m, int r1, int r2)
+{
+	double* temp;
+	temp = m[r2];
+	m[r2] = m[r1];
+	m[r1] = temp;
+}
 
 /* Find solution from rref form of extended coefficient matrix */
 
 /* Print extended coefficient matrix */
-void printMatrix(double* system, int size)
+void printMatrix(double** system, int size)
 {
-	for (int i = 0; i < (size * (size++)); i++)
-	{
-		printf("%3.0lf", *(system + i));
+	for (char a = 'a'; a < size; a++) {
+		printf("|%c  ", a);
+}
 
-		if (i != 0 && ((i + 1) % (size++) == 0))
-			printf("\n");
+	printf("\b|answer|\n");
+	for (int i = 0; i < size; i++){
+		for (int j = 0; j <= size; j++) {
+			printf("%3.0lf", *(*system + i)+j);
+		}
+		printf("\n");
+	//	if (i != 0 && ((i + 1) % (size++) == 0))
+		//	printf("\n");
 	}
 }
 
+void kclean()
+{
+	while (getchar() != '\n') {
+		continue;
+	}
+}
+
+int next(int size)
+{
+	if (*data.current < size) {
+		return *data.current + 1;
+	}
+	else {
+		return *data.current = 0;
+	}
+}
 /* Print solution to system */
