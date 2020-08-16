@@ -4,6 +4,7 @@ Version  : 16.08.2020.
 Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
 */
 
+
 #define _CRT_SECURE_NO_DEPRECATE // Required to use scanf() without warnings
 
 /* Header files */
