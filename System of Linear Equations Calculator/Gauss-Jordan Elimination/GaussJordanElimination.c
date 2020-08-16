@@ -1,5 +1,6 @@
 /*
-Author	 : Myungjun Kim
+Author	 : Myungjun Kim & Mario Ivanov
+Version  : 16.08.2020.
 Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
 */
 
