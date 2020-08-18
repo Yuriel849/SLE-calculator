@@ -4,17 +4,15 @@ Version  : 16.08.2020.
 Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
 */
 
-
 #define _CRT_SECURE_NO_DEPRECATE // Required to use scanf() without warnings
 
 /* Header files */
 #include <stdio.h>
 #include <stdlib.h>
 
-
 /* Function prototypes */
-
 int getSizeOfSystem(void);
+double** createSystem(int);
 
 void printMatrix(double** system, int size);
 void getRrefForm(double** m, int size);
@@ -25,33 +23,12 @@ void rowReduction(double** m, int size, int current);
 int findNonNull(double** m, int size, int possition);
 void arrangeRows(double** m, int size);
 
-
-
 /* Main function */
 int main(void)
 {
+	int size = getSizeOfSystem();		  // Get size of the system of linear equations from the user.
+	double** system = createSystem(size); // Create a 2D array for the system of linear equations
 
-	int size = getSizeOfSystem();
-	if (size == 0) {
-		exit(EXIT_FAILURE);
-	}
-	int columns = 1 + size;
-
-	double** system;
-
-	system = (double**)malloc(size * sizeof(double*));
-	if (system == NULL) {
-		free(system);
-		exit(EXIT_FAILURE);
-	}
-
-	for (int i = 0; i < size; i++) {
-		system[i] = (double*)malloc(columns * sizeof(double));
-		if (system[i] == NULL) {
-			free(system);
-			exit(EXIT_FAILURE);
-		}
-	}
 	getValuesOfSystem(system, size);
 	printMatrix(system, size);
 	getRrefForm(system, size);
@@ -81,12 +58,35 @@ int getSizeOfSystem(void)
 			break;
 
 		printf("That entry is invalid. Enter the number of equations: ");
-		while (getchar() != '\n') {
+		
+		while (getchar() != '\n') { // Clear the char buffer
 			continue;
 		}
 	}
 
 	return equations;
+}
+
+/* Create the system of linear equations */
+double** createSystem(int size)
+{
+	double** system;
+
+	if ((system = (double**)malloc(size * sizeof(double*))) == NULL)
+	{
+		free(system);
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < size; i++) {
+		if ((system[i] = (double*)malloc((size + 1) * sizeof(double))) == NULL)
+		{
+			free(system);
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	return system;
 }
 
 /* Find rref form of extended coefficient matrix */
