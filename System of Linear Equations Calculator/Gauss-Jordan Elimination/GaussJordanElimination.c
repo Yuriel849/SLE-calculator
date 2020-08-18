@@ -13,11 +13,11 @@ Contents : Solve a system of linear equations using Gauss-Jordan Elimination, an
 /* Function prototypes */
 int getSizeOfSystem(void);
 double** createSystem(int);
-
+void getValuesOfSystem(double** system, int size);
 void printMatrix(double** system, int size);
+
 void getRrefForm(double** m, int size);
 void rowExchange(double** m, int r1, int r2);
-void getValuesOfSystem(double** system, int size);
 
 void rowReduction(double** m, int size, int current);
 int findNonNull(double** m, int size, int possition);
@@ -28,21 +28,19 @@ int main(void)
 {
 	int size = getSizeOfSystem();		  // Get size of the system of linear equations from the user.
 	double** system = createSystem(size); // Create a 2D array for the system of linear equations
+	getValuesOfSystem(system, size);	  // Get the equation coefficients and solutions from the user.
+	printMatrix(system, size);			  // Print the matrix for the first time.
 
-	getValuesOfSystem(system, size);
-	printMatrix(system, size);
 	getRrefForm(system, size);
 	printMatrix(system, size);
 
-
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; i++) {	  // Free memory before termination.
 		free(system[i]);
 	}
 	free(system);
 
 	return 0xF;
 }
-
 
 /* Designate size of system (user input) */
 int getSizeOfSystem(void)
@@ -89,6 +87,37 @@ double** createSystem(int size)
 	return system;
 }
 
+/* Enter coefficients and solution values (user input) */
+void getValuesOfSystem(double** system, int size)
+{
+	printf("Please enter the coefficients of each equation, followed by the solution, one at a time and hit Enter.\n");
+	for (int i = 0; i < size; i++)
+	{
+		for (int y = 0; y <= size; y++) {
+			int b = scanf("%lf", &system[i][y]);
+			while (getchar() != '\n') {
+				continue;
+			}
+		}
+	}
+}
+
+/* Print extended coefficient matrix */
+void printMatrix(double** system, int size)
+{
+	for (char a = 'a'; a < 'a' + size; a++) {
+		printf("|%c  ", a);
+	}
+
+	printf("\b|answer|\n");
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j <= size; j++) {
+			printf("%3.0lf", system[i][j]);
+		}
+		printf("\n");
+	}
+}
+
 /* Find rref form of extended coefficient matrix */
 void getRrefForm(double** m, int size)
 {
@@ -108,22 +137,6 @@ void getRrefForm(double** m, int size)
 	}
 }
 
-/* Enter coefficients and solution values (user input) */
-void getValuesOfSystem(double** system, int size)
-{
-
-	printf("Please enter the coefficients of each equation one at a time and hit Enter.\n");
-	for (int i = 0; i < size; i++)
-	{
-		for (int y = 0; y <= size; y++) {
-			int b = scanf("%lf", &system[i][y]);
-			while (getchar() != '\n') {
-				continue;
-			}
-		}
-
-	}
-}
 /* Test the row operation functions (multiplication, addition, exchange)
 void testRowOperations(double* system, int size) {
 	printMatrix(system, size);
@@ -159,23 +172,12 @@ void rowAddition(double** system, int size, int firstRowStart, int secondRowStar
 	}
 }
 */
-/* Row exchange (pointers)
-void rowExchange(double* system, int size, int firstRowStart, int secondRowStart)
-{
-	double temp = 0; // Variable to use when swapping values
-	int end = firstRowStart + size;
 
-	for (; firstRowStart < end; firstRowStart++, secondRowStart++)
-	{
-		temp = system[firstRowStart];
-		system[firstRowStart] = system[secondRowStart];
-		system[secondRowStart] = temp;
-	}
-}
-*/
+
+/* Row exchange function */
 void rowExchange(double** m, int r1, int r2)
 {
-	double* temp;
+	double* temp; // Variable to use when swapping values
 	temp = m[r2];
 	m[r2] = m[r1];
 	m[r1] = temp;
@@ -183,21 +185,6 @@ void rowExchange(double** m, int r1, int r2)
 
 /* Find solution from rref form of extended coefficient matrix */
 
-/* Print extended coefficient matrix */
-void printMatrix(double** system, int size)
-{
-	for (char a = 'a'; a < 'a' + size; a++) {
-		printf("|%c  ", a);
-	}
-
-	printf("\b|answer|\n");
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j <= size; j++) {
-			printf("%3.0lf", system[i][j]);
-		}
-		printf("\n");
-	}
-}
 
 void rowReduction(double** m, int size, int current)
 {
