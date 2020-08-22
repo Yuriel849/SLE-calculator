@@ -15,13 +15,13 @@ int getSizeOfSystem(void);
 double** createSystem(int);
 void getValuesOfSystem(double** system, int size);
 void printMatrix(double** system, int size);
-
 void getRrefForm(double** m, int size);
-void rowExchange(double** m, int r1, int r2);
-
-void rowReduction(double** m, int size, int current);
-int findNonNull(double** m, int size, int possition);
 void arrangeRows(double** m, int size);
+int findNonNull(double** m, int size, int possition);
+void rowExchange(double** m, int r1, int r2);
+void freeMemory(double** m, int size);
+void rowMultiplication(double** system, int size, int target, double multiplier);
+void rowReduction(double** m, int size, int standard, int target);
 
 /* Main function */
 int main(void)
@@ -34,12 +34,7 @@ int main(void)
 	getRrefForm(system, size);
 	printMatrix(system, size);
 
-	for (int i = 0; i < size; i++) {	  // Free memory before termination.
-		free(system[i]);
-	}
-	free(system);
-
-	return 0xF;
+	freeMemory(system, size);			  // Free memory before termination.
 }
 
 /* Designate size of system (user input) */
@@ -112,7 +107,7 @@ void printMatrix(double** system, int size)
 	printf("\b|answer|\n");
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j <= size; j++) {
-			printf("%3.0lf", system[i][j]);
+			printf("%3.2lf", system[i][j]);
 		}
 		printf("\n");
 	}
@@ -121,47 +116,69 @@ void printMatrix(double** system, int size)
 /* Find rref form of extended coefficient matrix */
 void getRrefForm(double** m, int size)
 {
-	arrangeRows(m, size);
 	for (int i = 0; i < size; i++) {
-		double fMSVC = m[i][i];
-		double mult = (double)1 / fMSVC;
-			if (fMSVC == 1.0) {
-				rowReduction(m, size, i);
+		if (m[i][i] == 0) { // Ensure the first column has a valid non-zero value
+			int temp = findNonNull(m, size, i);
+			if (temp != NULL) {
+				rowExchange(m, i, temp);
 			}
-			else {
-				for (int k = 0; k <= size; k++) {
-					m[i][k] *= mult;
-				}
-				rowReduction(m, size, i);
+		}
+		for (int j = i; j < size; j++) { // Ensure the first columns of all rows except the first row are zeros
+			double colVal = m[j][i];
+			
+			if (colVal == 0) {
+				continue;
 			}
+			else if (colVal != 1.0) {
+				rowMultiplication(m, size, j, (double)1 / colVal);
+			}
+
+			if (j != i) {
+				rowReduction(m, size, i, j);
+			}
+		}
 	}
 }
 
-/* Test the row operation functions (multiplication, addition, exchange)
-void testRowOperations(double* system, int size) {
-	printMatrix(system, size);
-	rowMultiplication(system, size, 0, 3);
-
-	printMatrix(system, size);
-	rowAddition(system, size, 4, 8);
-
-	printMatrix(system, size);
-	rowExchange(system, size, 0, 4);
-
-	printMatrix(system, size);
+void arrangeRows(double** m, int size) {
+	for (int i = 0; i < size; i++) {
+		if (m[i][i] == 0) {
+			int tmp = findNonNull(m, size, i);
+			rowExchange(m, i, tmp);
+		}
+	}
 }
-*/
-/* Row multiplication with scalar (pointers) */
-/*void rowMultiplication(double** system, int size, int start, double multiplier)
+
+/* Finds a row where the value in the designated position is not zero */
+int findNonNull(double** m, int size, int position)
 {
-	//int end = start + size;
+	for (int i = 0; i < size; i++) {
+		if (m[i][position] != 0 && i > position) {
+			return i;
+		}
+	}
 
-	for (int i =0 ; i <= size; i++)
+	return NULL;
+}
+
+/* Row exchange function */
+void rowExchange(double** m, int r1, int r2)
+{
+	double* temp;
+	temp = m[r2];
+	m[r2] = m[r1];
+	m[r1] = temp;
+}
+
+/* Row multiplication with scalar (pointers) */
+void rowMultiplication(double** system, int size, int target, double multiplier)
+{
+	for (int i = 0; i <= size; i++)
 	{
-		system[start][i] *=   multiplier;
+		system[target][i] *= multiplier;
 	}
 }
-*/
+
 /* Row addition (pointers) *//*
 void rowAddition(double** system, int size, int firstRowStart, int secondRowStart)
 {
@@ -174,57 +191,20 @@ void rowAddition(double** system, int size, int firstRowStart, int secondRowStar
 */
 
 
-/* Row exchange function */
-void rowExchange(double** m, int r1, int r2)
+/* Frees the memory of the given two-dimensional array */
+void freeMemory(double** m, int size)
 {
-	double* temp; // Variable to use when swapping values
-	temp = m[r2];
-	m[r2] = m[r1];
-	m[r1] = temp;
-}
-
-/* Find solution from rref form of extended coefficient matrix */
-
-
-void rowReduction(double** m, int size, int current)
-{
-
-	for (int i = 0; i < size;) {
-		if (i == current) {
-			i++;
-		}
-		else {
-			double mult = m[i][current];
-
-			for (int j = 0; j <= size; j++) {
-				m[i][j] -= mult * m[current][j];
-			}
-			printMatrix(m, size);
-			i++;
-		}
-		}
-}
-
-int findNonNull(double** m, int size, int position)
-{
-		for (int i = 0; i < size; i++) {
-			if (m[i][position] != 0 && i > position) {
-				return i;
-			}
-		}
-
-		return NULL;
-}
-
-void arrangeRows(double** m, int size) {
 	for (int i = 0; i < size; i++) {
-		if (m[i][i] == 0) {
-			int tmp = findNonNull(m, size, i);
-			rowExchange(m, i, tmp);
-		}
-
+		free(m[i]);
 	}
-
+	free(m);
 }
 
-/* Print solution to system */
+void rowReduction(double** m, int size, int standard, int target)
+{
+	for (int i = 0; i <= size; i++) {
+		m[target][i] = m[standard][i] - m[target][i];
+	}
+	printMatrix(m, size);
+}
+
