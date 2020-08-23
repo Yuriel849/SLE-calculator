@@ -119,7 +119,7 @@ void getRrefForm(double** m, int size)
 	for (int i = 0; i < size; i++) {
 		if (m[i][i] == 0) { // Ensure the first column has a valid non-zero value
 			int temp = findNonNull(m, size, i);
-			if (temp != NULL) {
+			if (temp != -999) {
 				rowExchange(m, i, temp);
 			}
 		}
@@ -158,7 +158,7 @@ int findNonNull(double** m, int size, int position)
 		}
 	}
 
-	return NULL;
+	return -999;
 }
 
 /* Row exchange function */
