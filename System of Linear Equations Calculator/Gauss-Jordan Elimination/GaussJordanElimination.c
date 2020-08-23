@@ -22,10 +22,12 @@ void rowExchange(double** m, int r1, int r2);
 void freeMemory(double** m, int size);
 void rowMultiplication(double** system, int size, int target, double multiplier);
 void rowReduction(double** m, int size, int standard, int target);
+extern int test(void);
 
 /* Main function */
 int main(void)
 {
+	/*
 	int size = getSizeOfSystem();		  // Get size of the system of linear equations from the user.
 	double** system = createSystem(size); // Create a 2D array for the system of linear equations
 	getValuesOfSystem(system, size);	  // Get the equation coefficients and solutions from the user.
@@ -35,6 +37,9 @@ int main(void)
 	printMatrix(system, size);
 
 	freeMemory(system, size);			  // Free memory before termination.
+*/
+	test();
+	return 0;
 }
 
 /* Designate size of system (user input) */
@@ -51,7 +56,7 @@ int getSizeOfSystem(void)
 			break;
 
 		printf("That entry is invalid. Enter the number of equations: ");
-		
+
 		while (getchar() != '\n') { // Clear the char buffer
 			continue;
 		}
@@ -125,7 +130,7 @@ void getRrefForm(double** m, int size)
 		}
 		for (int j = i; j < size; j++) { // Ensure the first columns of all rows except the first row are zeros
 			double colVal = m[j][i];
-			
+
 			if (colVal == 0) {
 				continue;
 			}
@@ -207,4 +212,3 @@ void rowReduction(double** m, int size, int standard, int target)
 	}
 	printMatrix(m, size);
 }
-
