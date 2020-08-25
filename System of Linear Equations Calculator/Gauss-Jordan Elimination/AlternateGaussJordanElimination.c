@@ -1,5 +1,6 @@
 /*
-Author	 : Myungjun Kim
+Author	 : Myungjun Kim & Mario Ivanov
+Version: 26.08.2020
 Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
 */
 
@@ -28,7 +29,6 @@ void arrangeRows(double** m, int size);
 /* Main function */
 int main(void)
 {
-
 	int size = getSizeOfSystem();
 	if (size == 0) {
 		exit(EXIT_FAILURE);
@@ -109,7 +109,6 @@ void getRrefForm(double** m, int size)
 /* Enter coefficients and solution values (user input) */
 void getValuesOfSystem(double** system, int size)
 {
-
 	printf("Please enter the coefficients of each equation one at a time and hit Enter.\n");
 	for (int i = 0; i < size; i++)
 	{
@@ -119,58 +118,9 @@ void getValuesOfSystem(double** system, int size)
 				continue;
 			}
 		}
-
 	}
 }
-/* Test the row operation functions (multiplication, addition, exchange)
-void testRowOperations(double* system, int size) {
-	printMatrix(system, size);
-	rowMultiplication(system, size, 0, 3);
 
-	printMatrix(system, size);
-	rowAddition(system, size, 4, 8);
-
-	printMatrix(system, size);
-	rowExchange(system, size, 0, 4);
-
-	printMatrix(system, size);
-}
-*/
-/* Row multiplication with scalar (pointers) */
-/*void rowMultiplication(double** system, int size, int start, double multiplier)
-{
-	//int end = start + size;
-
-	for (int i =0 ; i <= size; i++)
-	{
-		system[start][i] *=   multiplier;
-	}
-}
-*/
-/* Row addition (pointers) *//*
-void rowAddition(double** system, int size, int firstRowStart, int secondRowStart)
-{
-
-	for (int i =0; i<= size; i++)
-	{
-		system[firstRowStart][i] += system[secondRowStart][i];
-	}
-}
-*/
-/* Row exchange (pointers)
-void rowExchange(double* system, int size, int firstRowStart, int secondRowStart)
-{
-	double temp = 0; // Variable to use when swapping values
-	int end = firstRowStart + size;
-
-	for (; firstRowStart < end; firstRowStart++, secondRowStart++)
-	{
-		temp = system[firstRowStart];
-		system[firstRowStart] = system[secondRowStart];
-		system[secondRowStart] = temp;
-	}
-}
-*/
 void rowExchange(double** m, int r1, int r2)
 {
 	double* temp;
@@ -178,8 +128,6 @@ void rowExchange(double** m, int r1, int r2)
 	m[r2] = m[r1];
 	m[r1] = temp;
 }
-
-/* Find solution from rref form of extended coefficient matrix */
 
 /* Print extended coefficient matrix */
 void printMatrix(double** system, int size)
@@ -233,9 +181,5 @@ void arrangeRows(double** m, int size) {
 			int tmp = findNonNull(m, size, i);
 			rowExchange(m, i, tmp);
 		}
-
 	}
-
 }
-
-/* Print solution to system */
