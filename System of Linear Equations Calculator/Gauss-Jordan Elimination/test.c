@@ -1,3 +1,9 @@
+/*
+Author	 : Mario Ivanov
+Version  : 23.08.2020.
+Contents : Provide a pre-defined system of linear equations to test the Gauss-Jordan Elimination program.
+*/
+
 #include <stdlib.h>
 
 int test(void) {

@@ -1,6 +1,6 @@
 /*
 Author	 : Myungjun Kim & Mario Ivanov
-Version  : 22.08.2020.
+Version  : 25.08.2020.
 Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
 */
 
@@ -112,7 +112,7 @@ void printMatrix(double** system, int size)
 	printf("\b|answer|\n");
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j <= size; j++) {
-			printf("%3.2lf", system[i][j]);
+			printf("%3.0lf", system[i][j]);
 		}
 		printf("\n");
 	}
