@@ -22,7 +22,7 @@ void rowExchange(double** m, int r1, int r2);
 void freeMemory(double** m, int size);
 void rowMultiplication(double** system, int size, int target, double multiplier);
 void rowReduction(double** m, int size, int standard, int target);
-extern int test(void);
+extern double** getTestSystem(void);
 
 /* Main function */
 int main(void)
@@ -30,6 +30,11 @@ int main(void)
 	/*
 	int size = getSizeOfSystem();		  // Get size of the system of linear equations from the user.
 	double** system = createSystem(size); // Create a 2D array for the system of linear equations
+	*/
+
+	int size = 4;
+	double** system = getTestSystem();
+
 	getValuesOfSystem(system, size);	  // Get the equation coefficients and solutions from the user.
 	printMatrix(system, size);			  // Print the matrix for the first time.
 
@@ -37,8 +42,6 @@ int main(void)
 	printMatrix(system, size);
 
 	freeMemory(system, size);			  // Free memory before termination.
-*/
-	test();
 	return 0;
 }
 

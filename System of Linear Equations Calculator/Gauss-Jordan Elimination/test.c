@@ -6,7 +6,7 @@ Contents : Provide a pre-defined system of linear equations to test the Gauss-Jo
 
 #include <stdlib.h>
 
-int test(void) {
+double** getTestSystem(void) {
 	double a[4][5] = { {1,1,1,0,2},{1,0,1,-1,0},{1,1,0,1,4},{0,1,1,-1,-3} };
 	double b[4][5] = { {1,1,1,0,2},{1,2,0,2,0},{3,0,5,1,-1},{0,2,2,1,-2} };
 	double c[4][5] = { {2,4,-2,0,8},{-1,0,3,0,-8},{0,1,2,0,-5},{-3,-2,-2,0,7} };
