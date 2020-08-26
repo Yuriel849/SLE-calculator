@@ -1,15 +1,3 @@
-/*
-Author	 : Myungjun Kim & Mario Ivanov
-Version  : 25.08.2020.
-Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
-*/
-
-#define _CRT_SECURE_NO_DEPRECATE // Required to use scanf() without warnings
-
-/* Header files */
-#include <stdio.h>
-#include <stdlib.h>
-
 /* Function prototypes */
 int getSizeOfSystem(void);
 double** createSystem(int);
@@ -21,19 +9,16 @@ int findNonNull(double** m, int size, int possition);
 void rowExchange(double** m, int r1, int r2);
 void freeMemory(double** m, int size);
 void rowMultiplication(double** system, int size, int target, double multiplier);
-void rowReduction(double** m, int size, int standard, int target);
+void rowReduction(double** m, int size, int standard);
+int checkSolution(double** m, int size, int standard);
 extern double** getTestSystem(void);
 
 /* Main function */
 int main(void)
 {
-	/*
+	getTestSystem();
 	int size = getSizeOfSystem();		  // Get size of the system of linear equations from the user.
 	double** system = createSystem(size); // Create a 2D array for the system of linear equations
-	*/
-
-	int size = 4;
-	double** system = getTestSystem();
 
 	getValuesOfSystem(system, size);	  // Get the equation coefficients and solutions from the user.
 	printMatrix(system, size);			  // Print the matrix for the first time.
@@ -42,6 +27,8 @@ int main(void)
 	printMatrix(system, size);
 
 	freeMemory(system, size);			  // Free memory before termination.
+
+	getTestSystem();
 	return 0;
 }
 
@@ -75,7 +62,6 @@ double** createSystem(int size)
 
 	if ((system = (double**)malloc(size * sizeof(double*))) == NULL)
 	{
-		free(system);
 		exit(EXIT_FAILURE);
 	}
 
@@ -109,45 +95,46 @@ void getValuesOfSystem(double** system, int size)
 void printMatrix(double** system, int size)
 {
 	for (char a = 'a'; a < 'a' + size; a++) {
-		printf("|%c  ", a);
+		printf("|%c   ", a);
 	}
 
-	printf("\b|answer|\n");
+	printf("|%s.|\n","ans");
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j <= size; j++) {
-			printf("%3.0lf", system[i][j]);
+			printf("| %3.0lf", system[i][j]);
 		}
-		printf("\n");
+		printf("|\n");
 	}
 }
 
 /* Find rref form of extended coefficient matrix */
 void getRrefForm(double** m, int size)
 {
+
+	arrangeRows(m, size);
 	for (int i = 0; i < size; i++) {
-		if (m[i][i] == 0) { // Ensure the first column has a valid non-zero value
-			int temp = findNonNull(m, size, i);
-			if (temp != -999) {
-				rowExchange(m, i, temp);
+		double colVal = m[i][i];
+		if (colVal == 0 && checkSolution(m, size, i) == 0) {
+			printf("System has inf. number of solutions");
+			exit(EXIT_SUCCESS);
+		}
+		else if (colVal == 0 && checkSolution(m, size,i) == 1) {
+			printf("System has no solution");
+			exit(EXIT_SUCCESS);
+		}
+			double mult = (double)1 / colVal;
+			if (colVal == 1.0) {
+				rowReduction(m, size, i);
+				arrangeRows(m, size);
+			}
+			else {
+				rowMultiplication(m, size, i, mult);
+				rowReduction(m, size, i);
+				arrangeRows(m, size);
 			}
 		}
-		for (int j = i; j < size; j++) { // Ensure the first columns of all rows except the first row are zeros
-			double colVal = m[j][i];
-
-			if (colVal == 0) {
-				continue;
-			}
-			else if (colVal != 1.0) {
-				rowMultiplication(m, size, j, (double)1 / colVal);
-			}
-
-			if (j != i) {
-				rowReduction(m, size, i, j);
-			}
-		}
-	}
 }
-
+/*Checks the main diagonal for zero entries and exchange rows if this is the case */
 void arrangeRows(double** m, int size) {
 	for (int i = 0; i < size; i++) {
 		if (m[i][i] == 0) {
@@ -166,7 +153,7 @@ int findNonNull(double** m, int size, int position)
 		}
 	}
 
-	return -999;
+	return 0;
 }
 
 /* Row exchange function */
@@ -190,7 +177,6 @@ void rowMultiplication(double** system, int size, int target, double multiplier)
 /* Row addition (pointers) *//*
 void rowAddition(double** system, int size, int firstRowStart, int secondRowStart)
 {
-
 	for (int i =0; i<= size; i++)
 	{
 		system[firstRowStart][i] += system[secondRowStart][i];
@@ -208,10 +194,38 @@ void freeMemory(double** m, int size)
 	free(m);
 }
 
-void rowReduction(double** m, int size, int standard, int target)
+void rowReduction(double** m, int size, int standard)
 {
-	for (int i = 0; i <= size; i++) {
-		m[target][i] = m[standard][i] - m[target][i];
+	for (int i = 0; i < size;) {
+		if (i == standard) {
+			i++;
+		}
+		else {
+			double mult = m[i][standard];
+
+			for (int j = 0; j <= size; j++) {
+				m[i][j] -= mult * m[standard][j];
+			}
+			i++;
+		}
 	}
-	printMatrix(m, size);
+}
+
+int checkSolution(double** m, int size, int standard)
+{
+	int zeroes = 0;
+	for (int i = 0; i <= size; i++) {
+		if (round(m[standard][i]) == 0) {
+			zeroes++;
+		}
+	}
+	if (zeroes == (size +1)) {
+		return 0;
+	}
+	else if (zeroes == size) {
+		return 1;
+	}
+	else {
+		return 2;
+	}
 }
