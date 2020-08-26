@@ -1,3 +1,7 @@
+/* Header files */
+#include <stdio.h>
+#include <stdlib.h>
+
 /* Function prototypes */
 int getSizeOfSystem(void);
 double** createSystem(int);
