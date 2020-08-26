@@ -1,3 +1,11 @@
+/*
+Author: Myungjun Kim& Mario Ivanov
+Version : 26.08.2020.
+Contents : Solve a system of linear equations using Gauss - Jordan Elimination, and print each step.
+*/
+
+#define _CRT_SECURE_NO_DEPRECATE // Required to use scanf() without warnings
+
 /* Header files */
 #include <stdio.h>
 #include <stdlib.h>
