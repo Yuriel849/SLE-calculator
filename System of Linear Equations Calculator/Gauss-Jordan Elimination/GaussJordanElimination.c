@@ -1,7 +1,7 @@
 /*
-Author: Myungjun Kim& Mario Ivanov
-Version : 26.08.2020.
-Contents : Solve a system of linear equations using Gauss - Jordan Elimination, and print each step.
+Author	 : Myungjun Kim & Mario Ivanov
+Version  : 27.08.2020.
+Contents : Solve a system of linear equations using Gauss-Jordan Elimination, and print each step.
 */
 
 #define _CRT_SECURE_NO_DEPRECATE // Required to use scanf() without warnings
@@ -9,6 +9,11 @@ Contents : Solve a system of linear equations using Gauss - Jordan Elimination, 
 /* Header files */
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <math.h>
+
+
+
 
 /* Function prototypes */
 int getSizeOfSystem(void);
@@ -23,7 +28,7 @@ void freeMemory(double** m, int size);
 void rowMultiplication(double** system, int size, int target, double multiplier);
 void rowReduction(double** m, int size, int standard);
 int checkSolution(double** m, int size, int standard);
-extern double** getTestSystem(void);
+extern int getTestSystem(void);
 
 /* Main function */
 int main(void)
@@ -40,7 +45,7 @@ int main(void)
 
 	freeMemory(system, size);			  // Free memory before termination.
 
-	getTestSystem();
+	//getTestSystem();
 	return 0;
 }
 
@@ -130,10 +135,15 @@ void getRrefForm(double** m, int size)
 			printf("System has inf. number of solutions");
 			exit(EXIT_SUCCESS);
 		}
-		else if (colVal == 0 && checkSolution(m, size,i) == 1) {
+		else if (colVal == 0 && checkSolution(m, size, i) == 1) {
 			printf("System has no solution");
 			exit(EXIT_SUCCESS);
 		}
+		else if (colVal == 0 && checkSolution(m, size, i) == 2) {
+			--i;
+			i++;
+		}
+		else {
 			double mult = (double)1 / colVal;
 			if (colVal == 1.0) {
 				rowReduction(m, size, i);
@@ -145,6 +155,7 @@ void getRrefForm(double** m, int size)
 				arrangeRows(m, size);
 			}
 		}
+	}
 }
 /*Checks the main diagonal for zero entries and exchange rows if this is the case */
 void arrangeRows(double** m, int size) {
@@ -225,16 +236,21 @@ void rowReduction(double** m, int size, int standard)
 
 int checkSolution(double** m, int size, int standard)
 {
-	int zeroes = 0;
+	int zeroesRow = 0;
+	int zeroesColumn = 0;
 	for (int i = 0; i <= size; i++) {
 		if (round(m[standard][i]) == 0) {
-			zeroes++;
+			zeroesRow++;
+			if (i < size && round(m[i][standard]) == 0) {
+				zeroesColumn++;
+			}
 		}
 	}
-	if (zeroes == (size +1)) {
+
+	if (zeroesRow == (size +1) && zeroesColumn < size) {
 		return 0;
 	}
-	else if (zeroes == size) {
+	else if (zeroesRow == size && zeroesColumn < size) {
 		return 1;
 	}
 	else {
