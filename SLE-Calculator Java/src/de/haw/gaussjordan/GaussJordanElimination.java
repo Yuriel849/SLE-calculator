@@ -9,6 +9,6 @@ import de.haw.common.Solveable;
  * @author test
  *
  */
-public class GaussJordanMatrix implements Solveable {
+public class GaussJordanElimination implements Solveable {
 
 }
