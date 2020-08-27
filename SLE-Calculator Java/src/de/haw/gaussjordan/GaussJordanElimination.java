@@ -3,6 +3,7 @@
  */
 package de.haw.gaussjordan;
 
+import de.haw.common.Matrix;
 import de.haw.common.Solveable;
 
 /**
@@ -10,5 +11,7 @@ import de.haw.common.Solveable;
  *
  */
 public class GaussJordanElimination implements Solveable {
-
+	public void solveSystem(Matrix system) {
+		
+	}
 }
