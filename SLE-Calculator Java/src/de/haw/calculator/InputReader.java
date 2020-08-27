@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.haw.gaussjordan;
+package de.haw.calculator;
 
 /**
  * @author test
