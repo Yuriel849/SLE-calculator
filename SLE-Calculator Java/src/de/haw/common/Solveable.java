@@ -1,5 +1,11 @@
+/**
+ * 
+ */
 package de.haw.common;
 
-public interface Solveable {
-	public void solveSystem(Matrix system);
+public interface Solveable 
+{
+	
+	public void solveSystem();
+	
 }

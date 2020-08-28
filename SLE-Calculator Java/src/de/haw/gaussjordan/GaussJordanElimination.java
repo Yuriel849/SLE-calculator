@@ -10,8 +10,20 @@ import de.haw.common.Solveable;
  * @author test
  *
  */
-public class GaussJordanElimination implements Solveable {
-	public void solveSystem(Matrix system) {
-		
+public class GaussJordanElimination implements Solveable
+{
+	private Matrix sle;
+	
+	public GaussJordanElimination(Matrix system)
+	{
+		sle = system;
 	}
+	
+	
+	public void solveSystem()
+	{
+
+	}
+	
+	
 }
