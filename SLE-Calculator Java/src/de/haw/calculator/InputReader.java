@@ -52,6 +52,7 @@ public class InputReader
 	    		 }
 	    		 else {
 	    			 for(String s : tokens) {
+	    				 j %=(rows + 1);
 	    				 mat.setValue(i,j ,Double.parseDouble(s));
 	    				 j++;
 	    			 }
