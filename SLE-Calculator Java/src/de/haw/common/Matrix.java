@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class Matrix 
 {
-	private ArrayList<ArrayList<Double>> rows;
+	final private ArrayList<ArrayList<Double>> rows;
 	private int rowSize;
 	
 	public Matrix(int rowSize) 
@@ -24,13 +24,23 @@ public class Matrix
 	public boolean setValue(int row, int column, double value) 
 	{
 		boolean result = false;
+		ArrayList<Double> targetRow = rows.get(row);
+		int targetSize = targetRow.size();
 		
-		if(0 <= row && row < rowSize && 0 <= column && column <= rowSize)
-			rows.get(row).set(column, value);
-		else
+		if(0 <= row && row < rowSize && 0 <= column && column <= rowSize) {
+			if(targetSize > column)
+				targetRow.set(column, value);
+			else {
+				for(int i = targetSize; i <= rowSize; i++) {
+					if(i != column)
+						targetRow.add(0.0);
+				}
+				targetRow.add(value);
+			}
+		} else
 			System.out.println("Error: Row or column number is invalid.");
 		
-		return result;		
+		return result;
 	}
 	
 	public double getValue(int row, int column) 
@@ -71,42 +81,15 @@ public class Matrix
 	{
 		return rowSize;
 	}
+	
 	/**
 	 * Prints matrix on the console
 	 */
 	public void print() 
 	{
-		// TODO Auto-generated method stub
-		
+		for(int i = 0; i < rowSize; i++) {
+			System.out.println(rows.get(i));
+			
+		}		
 	}
-	/**
-	 * Switches 2 rows of the matrix
-	 * @param integer representing position of row to swap  
-	 * @param integer representing position of row to swap
-	 */
-	public void switchRows(int rowA, int rowB) 
-	{
-		// TODO Auto-generated method stub
-		Collections.swap(rows, rowA, rowB);
-	}
-	/**
-	 * Multiplies a row with a coefficient
-	 * @param row integer representing a row in a matrix 
-	 * @param mult scaler for the row
-	 */
-	public void multRows(int row, double mult)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	/**
-	 * Subtract the current row form every other
-	 * @param row integer representing the pivot row which will not be changed
-	 */
-	public void reduceRows(int row)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
 }
