@@ -17,26 +17,19 @@ public class Matrix
 		rows = new ArrayList<>();
 		
 		for(int i = 0; i < rowSize; i++) {
-			rows.add(new ArrayList<>(rowSize+1));
+			rows.add(new ArrayList<>());
+			for(int j = 0; j <= rowSize; j++) {
+				rows.get(i).add(0.0);
+			}
 		}
 	}
 	
 	public boolean setValue(int row, int column, double value) 
 	{
 		boolean result = false;
-		ArrayList<Double> targetRow = rows.get(row);
-		int targetSize = targetRow.size();
 		
 		if(0 <= row && row < rowSize && 0 <= column && column <= rowSize) {
-			if(targetSize > column)
-				targetRow.set(column, value);
-			else {
-				for(int i = targetSize; i <= rowSize; i++) {
-					if(i != column)
-						targetRow.add(0.0);
-				}
-				targetRow.add(value);
-			}
+			rows.get(row).set(column, value);
 		} else
 			System.out.println("Error: Row or column number is invalid.");
 		
