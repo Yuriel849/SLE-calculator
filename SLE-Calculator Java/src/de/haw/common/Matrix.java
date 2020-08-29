@@ -81,6 +81,23 @@ public class Matrix
 	{
 		return rowSize;
 	}
+
+	public void setRow(int index, ArrayList<Double> newRow) {
+		rows.set(index, newRow);
+	}
+	
+	public ArrayList<Double> getRow(int index) {
+		ArrayList<Double> result = null;
+		
+		if(0 <= index && index < rowSize)
+			result = rows.get(index);
+		
+		return result;
+	}
+	
+	public void swapRows(int rowA, int rowB) {
+		Collections.swap(rows, rowA, rowB);
+	}
 	
 	/**
 	 * Prints matrix on the console
