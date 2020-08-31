@@ -1,14 +1,14 @@
+package de.haw.common;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 /**
  * A mxn matrix represented as an ArrayList of ArrayLists, which double values for each element.
  * 
  * @author Yuriel
  * @version 2020.08.30
  */
-package de.haw.common;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class Matrix 
 {
 	final private ArrayList<ArrayList<Double>> rows;

@@ -1,13 +1,11 @@
-/**
- * 
- */
 package de.haw.calculator;
 
 import java.util.Scanner;
 import de.haw.common.*;
 
 /**
- * @author test
+ * A class to handle user input of the number and values of the system of linear equations.
+ * @author Mario
  *
  */
 public class InputReader
@@ -19,6 +17,12 @@ public class InputReader
 		scan = new Scanner(System.in);
 	}
 
+	/**
+	 * Saves a system of linear equations in a Matrix instance.
+	 * The user enters the number of equations and the coefficients and solutions of each equation.
+	 * 
+	 * @return A matrix containing the system of linear equations entered by the user.
+	 */
 	public Matrix getSystem()
 	{
 		boolean jnz = false;
@@ -76,8 +80,6 @@ public class InputReader
 				}
 			}
 		}
-		
 		return mat;
 	}
-
 }
