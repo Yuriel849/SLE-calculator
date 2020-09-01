@@ -17,6 +17,7 @@ public class Matrix
 	/**
 	 * Creates a mxn matrix of size (rowSize)x(rowSize+1),
 	 * and initializes all elements as double values, "0.0".
+	 * 
 	 * @param rowSize The desired number of rows (== linear equations).
 	 */
 	public Matrix(int rowSize) 
@@ -26,9 +27,8 @@ public class Matrix
 		
 		for(int i = 0; i < rowSize; i++) {
 			rows.add(new ArrayList<>());
-			for(int j = 0; j <= rowSize; j++) {
+			for(int j = 0; j <= rowSize; j++)
 				rows.get(i).add(0.0);
-			}
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class Matrix
 	 * 
 	 * @param row The target row.
 	 * @param column The target column.
-	 * @return The double value at the designated location.
+	 * @return The double value at the designated location. Returns the value '-9999' if the value cannot be retrieved.
 	 */
 	public double getValue(int row, int column) 
 	{
@@ -77,6 +77,7 @@ public class Matrix
 	 * If the new size is smaller than the current size, reduces the size of the matrix.
 	 * If the new size is larger than the current size, increases the size of the matrix.
 	 * Nothing happens if the new size is the same as the current size.
+	 * 
 	 * @param size
 	 * @return True if the matrix is changed and the size is increased or decreased,
 	 * False if no change is made.
@@ -87,7 +88,9 @@ public class Matrix
 		
 		if(rowSize > size) {
 			for(int i = rowSize; i > size; i--) {
-				rows.remove(i - 1);
+				rows.remove(i - 1); // Removes the bottom row.
+				for(ArrayList<Double> row : rows)
+					row.remove(i);  // Removes the rightmost column.
 			}
 			rowSize = size;
 			result = true;
@@ -95,6 +98,11 @@ public class Matrix
 		else if (rowSize < size) {
 			for(int i = rowSize; i < size; i++) {
 				rows.add(new ArrayList<>(size+1));
+				for(int j = 0; j <= size; j++)
+					rows.get(i).add(0.0);
+				for(int j = 0; j < rowSize; j++)
+					for(int k = 0; k < size - rowSize; k++)
+						rows.get(j).add(0.0);
 			}
 			rowSize = size;
 			result = true;
@@ -127,7 +135,7 @@ public class Matrix
 	 * Returns the row of the matrix at the designated index.
 	 * 
 	 * @param index The index of the row to be returned.
-	 * @return The designated row.
+	 * @return The designated row. Returns null if the row cannot be retrieved.
 	 */
 	public ArrayList<Double> getRow(int index) {
 		ArrayList<Double> result = null;
@@ -149,12 +157,11 @@ public class Matrix
 	}
 	
 	/**
-	 * Prints matrix to the console.
+	 * Prints the matrix to the terminal, row by row.
 	 */
 	public void print() 
 	{
-		for(int i = 0; i < rowSize; i++) {
-			System.out.println(rows.get(i));	
-		}
+		for(ArrayList<Double> row : rows)
+			System.out.println(row);
 	}
 }
