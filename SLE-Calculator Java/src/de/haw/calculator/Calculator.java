@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.haw.calculator;
 
 import de.haw.common.Matrix;

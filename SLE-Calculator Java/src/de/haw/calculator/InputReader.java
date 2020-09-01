@@ -5,7 +5,8 @@ import de.haw.common.*;
 
 /**
  * A class to handle user input of the number and values of the system of linear equations.
- * @author Mario
+ * @author Mario & Yuriel
+ * @version 2020.09.01.
  *
  */
 public class InputReader
@@ -32,6 +33,8 @@ public class InputReader
 		boolean entered = false;
 		int i = 0;
 		int j = 0;
+		int count = 1; // Used to display which equation to enter values for (ex.) 1st linear equation)
+	
 		// Retrieves number of rows from the user input
 		while (!jnz) {
 			System.out.println("Enter number of equations > ");
@@ -45,10 +48,12 @@ public class InputReader
 			}
 		}
 		mat = new Matrix((int) rows);
+		
 		// Retrieves values of equation coefficients
 		while (!entered) {
-			System.out.println(
-					"Enter the coeficients of the equation on a single line separated by space and press enter");
+			System.out.printf(
+					"Enter the coeficients and solution of the No. %d equation \nas one sentence, with each number separated by a space \nand press enter.\n"
+					, count);
 			System.out.print("> ");
 			str = scan.nextLine().trim();
 			String[] tokens = str.split(" ");
@@ -60,7 +65,6 @@ public class InputReader
 				for (String s : tokens) {
 					j %= (rows + 1);
 					try {
-						//@SuppressWarnings("unused")
 						Double.parseDouble(s);
 						sEntered = true;
 					}
@@ -78,6 +82,7 @@ public class InputReader
 				if (i == rows) {
 					entered = true;
 				}
+				count++;
 			}
 		}
 		return mat;
